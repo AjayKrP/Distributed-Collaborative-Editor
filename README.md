@@ -2,7 +2,7 @@
 
 ### 1) Clone the repo and install dependencies
 ```bash
-$ git clone https://gitlab.com/spl0i7/pycollab && cd pycollab
+$ git clone https://gitlab.com/AjayKrP/pycollab && cd pycollab
 $ sudo pip3 install -r requirements.txt
 ```
 ### 2) Install Redis (Depending upon the operating system)
