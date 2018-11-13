@@ -1,1 +1,52 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <style>
+        .center {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+        textarea {
+            width: 400px;
+            height:400px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="row center">
+        <form class="center row" method="post" action="/save_file">
+            <div class="input-field">
+                <i class="material-icons prefix">file</i>
+                <textarea  id="textarea" rows="100" cols="100" name="{{ file_name }}">{{ content }}</textarea>
+                <input  id="filename" type="hidden" name ="file_name" value="{{ file_name }}" />
+                <label for="nickname">Filename</label>
+            </div>
+            <button class="btn btn-large waves-effect waves-light" type="submit" >Save</button>
+        </form>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
+<script type="text/javascript" charset="utf-8">
+    const file_name = document.getElementById('filename').value;
+    const text_area = document.getElementById('textarea');
+    let socket = io.connect('http://' + document.domain + ':' + location.port);
+    socket.on('connect', ()=> {
+        text_area.addEventListener('keyup', function (e){
+            socket.emit('update', `{"file" : "${file_name}", "key":"${text_area.value}" }`);
+        }, false);
+    });
+    socket.on('updated_text', (d)=>{
+        d = JSON.parse(d);
+        if (file_name === d.file) {
+            text_area.value = d.key;
+        }
+    });
+</script>
+</body>
